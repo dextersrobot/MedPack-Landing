@@ -1,0 +1,335 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MedPack | Clinical-Grade Lossless Compression API</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#1e3a5f",
+                        "surface-tint": "#455f87",
+                        "tertiary-fixed-dim": "#edbf7f",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#022448",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#341f00",
+                        "surface-dim": "#d9dadc",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1e",
+                        "on-background": "#191c1e",
+                        "tertiary-fixed": "#ffddb2",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#adc8f5",
+                        "surface-container": "#edeef0",
+                        "on-secondary-fixed": "#00174b",
+                        "on-tertiary-container": "#c69b5f",
+                        "on-primary-container": "#8aa4cf",
+                        "outline-variant": "#c4c6cf",
+                        "secondary-container": "#316bf3",
+                        "inverse-on-surface": "#f0f1f3",
+                        "tertiary-container": "#503300",
+                        "primary-fixed-dim": "#adc8f5",
+                        "on-tertiary-fixed": "#291800",
+                        "outline": "#74777f",
+                        "on-tertiary-fixed-variant": "#60410c",
+                        "surface-container-highest": "#e1e2e4",
+                        "surface-bright": "#f8f9fb",
+                        "surface": "#f8f9fb",
+                        "on-primary-fixed-variant": "#2d486d",
+                        "background": "#f8f9fb",
+                        "surface-container-high": "#e7e8ea",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-low": "#f3f4f6",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#d5e3ff",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#001c3b",
+                        "secondary": "#0051d5",
+                        "surface-variant": "#e1e2e4",
+                        "on-surface-variant": "#43474e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .command-gradient {
+            background: linear-gradient(135deg, #022448 0%, #1e3a5f 100%);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 glass-header shadow-sm border-none">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
+<div class="text-2xl font-bold tracking-tighter text-slate-900" style="">MedPack</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#how-it-works" style="">How It Works</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#benchmarks" style="">Benchmarks</a>
+<a data-dynamic="reportsHub" class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#">Reports</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#early-access" style="">Early Access</a>
+<a data-dynamic="liveDemo" class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#">Try demo</a>
+<a data-dynamic="apiKey" class="command-gradient text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-transform active:scale-95 inline-flex items-center justify-center" href="#">Get API Key</a>
+</div>
+<button class="md:hidden p-2 text-primary" style="">
+<span class="material-symbols-outlined" style="">menu</span>
+</button>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-surface py-24 md:py-32">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="z-10">
+<h1 class="text-5xl md:text-7xl font-extrabold text-primary tracking-tighter leading-tight mb-8" style="">
+                        Compress Healthcare Data <span class="text-secondary" style="">43% Better</span> Than the Best Alternative
+                    </h1>
+<p class="text-lg md:text-xl text-on-surface-variant mb-10 leading-relaxed max-w-xl" style="">
+                        The first compression engine built specifically for clinical data exploiting medical code relationships and cross-column conditional encoding to achieve what general-purpose algorithms cannot.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<a data-dynamic="earlyAccess" class="command-gradient text-on-primary px-8 py-4 rounded-lg font-bold text-md shadow-lg shadow-primary/10 transition-all hover:opacity-90 inline-flex items-center justify-center" href="#">Get Early Access</a>
+<a data-dynamic="technicalSpec" class="border-2 border-outline/20 text-primary px-8 py-4 rounded-lg font-bold text-md hover:bg-surface-container-low transition-colors inline-flex items-center justify-center" href="#">Read the Technical Spec</a>
+</div>
+</div>
+<div class="relative flex justify-center">
+<div class="w-full aspect-square max-w-lg bg-surface-container-low rounded-xl relative overflow-hidden shadow-2xl">
+<img alt="Data Visualization Architecture" class="w-full h-full object-cover mix-blend-overlay opacity-30" data-alt="abstract architectural visualization of 3d medical data nodes interconnected by high-speed digital light filaments in a sterile blue environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsG69D97vq8WfGqK8PtFb08ERh2iEBO26m8J2Ei9P9ExJaJGjRoIhjwKh5L70JlCH2uj-Yw20LqqVY-W1MfONBMdcjpNRDYlZra6_ic6X8hJie8iR-nJGoJnTP1aqUDVuG-tk84Dqfv6P8fEvZHsrob1HrnrxJ1IrbLprtOLacHTfHt9-RmdEsw9hW6GD3zhfgDrSV_WbDYAmnRxs8xAJ0gFtxWT8lD4T2QO4W96iyAqA1qXzgXnRVVf31yZsS5BtMU2zCRSJJIaQ" style="">
+<div class="absolute inset-0 flex flex-col justify-center p-12">
+<div class="space-y-6">
+<div class="h-2 w-3/4 bg-primary/20 rounded"></div>
+<div class="h-2 w-1/2 bg-secondary/30 rounded"></div>
+<div class="h-2 w-2/3 bg-primary/20 rounded"></div>
+<div class="flex items-end justify-between pt-8">
+<div class="text-4xl font-bold text-primary" style="">0.04s</div>
+<div class="text-sm font-label text-on-surface-variant uppercase tracking-widest" style="">Latency Floor</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Bar (Tonal Shift) -->
+<section class="bg-surface-container-low py-12">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
+<div class="text-3xl font-extrabold text-primary mb-1" style="">43%</div>
+<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Better than lzma</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
+<div class="text-3xl font-extrabold text-primary mb-1" style="">10/12</div>
+<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Benchmark Wins</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
+<div class="text-3xl font-extrabold text-primary mb-1" style="">1,400</div>
+<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Fuzz Tests Passed</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
+<div class="text-3xl font-extrabold text-primary mb-1" style="">SHA-256</div>
+<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Verified Lossless</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works Section -->
+<section class="py-24 bg-surface-container-lowest" id="how-it-works">
+<div class="max-w-7xl mx-auto px-6">
+<div class="mb-20">
+<h2 class="text-4xl font-bold text-primary tracking-tight mb-4" style="">The Clinical Advantage</h2>
+<div class="h-1.5 w-24 command-gradient rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24">
+<div class="space-y-6">
+<div class="w-12 h-12 flex items-center justify-center bg-primary-fixed text-primary rounded">
+<span class="material-symbols-outlined" style="">analytics</span>
+</div>
+<h3 class="text-xl font-bold text-primary" style="">Format Auto-Detection</h3>
+<p class="text-on-surface-variant leading-relaxed" style="">
+                            Intelligently recognizes FHIR, HL7 v2, and DICOM metadata structures instantly, applying specialized dictionaries for common medical headers and segment tags.
+                        </p>
+</div>
+<div class="space-y-6">
+<div class="w-12 h-12 flex items-center justify-center bg-primary-fixed text-primary rounded">
+<span class="material-symbols-outlined" style="">clinical_notes</span>
+</div>
+<h3 class="text-xl font-bold text-primary" style="">Medical Code Intelligence</h3>
+<p class="text-on-surface-variant leading-relaxed" style="">
+                            Built-in lookup engines for ICD-10, SNOMED-CT, and LOINC. MedPack compresses repetitive clinical codes using domain-specific entropy modeling.
+                        </p>
+</div>
+<div class="space-y-6">
+<div class="w-12 h-12 flex items-center justify-center bg-primary-fixed text-primary rounded">
+<span class="material-symbols-outlined" style="">grid_view</span>
+</div>
+<h3 class="text-xl font-bold text-primary" style="">Cross-Column Encoding</h3>
+<p class="text-on-surface-variant leading-relaxed" style="">
+                            Predicts value distributions across related data columns—such as inferring medication ranges based on diagnosis codes to minimize bit usage.
+                        </p>
+</div>
+</div>
+<!-- Pipeline Diagram -->
+<div class="p-10 bg-surface-container-low rounded-xl border border-outline-variant/10">
+<h4 class="text-sm font-label text-on-surface-variant uppercase tracking-widest mb-10 text-center" style="">In-Stream Processing Pipeline</h4>
+<div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Format Detection</div>
+<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
+<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Column Classification</div>
+<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
+<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Type-Specific Encoding</div>
+<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
+<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Cross-Column Conditional</div>
+<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
+<div class="px-6 py-4 command-gradient text-white rounded text-sm font-semibold" style="">Adaptive Entropy Backend</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Benchmark Results (Asymmetric Editorial Layout) -->
+<section class="py-24 bg-surface-container-low" id="benchmarks">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+<div class="lg:col-span-4">
+<h2 class="text-4xl font-bold text-primary tracking-tight mb-6 leading-tight" style="">Performance Benchmarks</h2>
+<p class="text-on-surface-variant mb-8 leading-relaxed" style="">
+                            MedPack consistently outperforms universal algorithms by leveraging the high redundancy of clinical terminologies and semantic schemas.
+                        </p>
+<div class="p-6 bg-tertiary-container text-on-tertiary-container rounded">
+<div class="flex gap-4 items-start">
+<span class="material-symbols-outlined" style="">verified</span>
+<div>
+<p class="text-xs font-label uppercase tracking-widest mb-2" style="">Dataset Verification</p>
+<p class="text-sm font-medium" style="">Benchmarked on 409,000+ rows of Synthea clinical data from 1,129 simulated patients.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="space-y-12">
+<!-- Chart Bar 1 -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-sm font-semibold text-primary">
+<span class="" style="">MedPack (Adaptive Engine)</span>
+<span class="" style="">0.14:1 Compression Ratio</span>
+</div>
+<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
+<div class="h-full command-gradient" style="width: 14%"></div>
+</div>
+</div>
+<!-- Chart Bar 2 -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-sm font-semibold text-on-surface-variant">
+<span class="" style="">lzma (Level 9)</span>
+<span class="" style="">0.26:1 Compression Ratio</span>
+</div>
+<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
+<div class="h-full bg-outline-variant" style="width: 26%"></div>
+</div>
+</div>
+<!-- Chart Bar 3 -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-sm font-semibold text-on-surface-variant">
+<span class="" style="">bz2</span>
+<span class="" style="">0.38:1 Compression Ratio</span>
+</div>
+<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
+<div class="h-full bg-outline-variant/60" style="width: 38%"></div>
+</div>
+</div>
+<!-- Chart Bar 4 -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-sm font-semibold text-on-surface-variant">
+<span class="" style="">gzip</span>
+<span class="" style="">0.44:1 Compression Ratio</span>
+</div>
+<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
+<div class="h-full bg-outline-variant/30" style="width: 44%"></div>
+</div>
+</div>
+</div>
+<p class="mt-8 text-xs text-on-surface-variant italic" style="">*Lower ratio indicates better compression performance.</p>
+<p class="mt-6 text-sm text-on-surface-variant leading-relaxed">
+<span class="font-semibold text-primary">Reproducible evidence:</span>
+<a data-dynamic="reportsHub" class="text-secondary font-semibold hover:underline ml-1" href="#">Reports hub</a><span class="text-on-surface-variant mx-1">·</span>
+<a data-dynamic="validationReport" class="text-secondary font-semibold hover:underline" href="#">Validation report</a><span class="text-on-surface-variant mx-1">·</span>
+<a data-dynamic="benchmarkReport" class="text-secondary font-semibold hover:underline" href="#">Benchmark report</a>
+</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Early Access Signup -->
+<section class="py-32 bg-surface-container-lowest" id="early-access">
+<div class="max-w-4xl mx-auto px-6 text-center">
+<h2 class="text-4xl font-bold text-primary mb-6" style="">Be First to Try MedPack</h2>
+<p class="text-on-surface-variant text-lg mb-12 max-w-xl mx-auto leading-relaxed" style="">
+                    Join our beta program and integrate the MedPack API into your existing HL7/FHIR pipelines. Reduced egress costs and faster data transfer guaranteed.
+                </p>
+<form class="flex flex-col md:flex-row gap-4 items-center max-w-lg mx-auto mb-6" data-dynamic-form="waitlist" method="get" target="_blank">
+<input class="w-full px-6 py-4 bg-surface-container-highest border-none border-b-2 border-outline/30 focus:border-secondary focus:ring-0 rounded-lg transition-all text-primary font-medium" name="email" placeholder="Enter clinical email address" type="email" autocomplete="email">
+<button type="submit" class="w-full md:w-auto command-gradient text-white px-8 py-4 rounded-lg font-bold shadow-lg shadow-primary/10 transition-transform active:scale-95 whitespace-nowrap">
+                        Join the Waitlist
+                    </button>
+</form>
+<p class="text-xs text-on-surface-variant tracking-wide" style="">No spam. Unsubscribe anytime. GDPR compliant.</p>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full border-t border-slate-200 bg-slate-50">
+<div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-7xl mx-auto">
+<div class="mb-8 md:mb-0">
+<div class="text-lg font-bold text-slate-900 mb-2" style="">MedPack</div>
+<div class="text-xs font-medium uppercase tracking-widest text-slate-500" style="">
+                    © 2026 MedPack Systems. Clinical-grade precision.
+                </div>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a data-dynamic="apiDocs" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">API Documentation</a>
+<a data-dynamic="github" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">GitHub</a>
+<a data-dynamic="reportsHub" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Reports</a>
+<a data-dynamic="validationReport" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Validation</a>
+<a data-dynamic="benchmarkReport" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Benchmark</a>
+<a data-dynamic="privacy" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Privacy Policy</a>
+<a data-dynamic="terms" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Terms of Service</a>
+<a data-dynamic="contactSupport" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+<script src="links.config.js"></script>
+<script src="apply-links.js"></script>
+</body></html>
