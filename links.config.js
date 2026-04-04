@@ -10,7 +10,7 @@ window.MEDPACK_LINKS = {
   earlyAccess: 'https://example.com/early-access',
   technicalSpec: '#',
 
-  // Live demo (e.g. Render) — separate from validation/benchmark report sites
+  // "Try demo" in nav → live Flask app on Render (benchmark / compress / decompress)
   liveDemo: 'https://medpack-demo.onrender.com',
 
   // Published static HTML reports (public repo — GitHub Pages)
