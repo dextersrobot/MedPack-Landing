@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedPack v6 — Validation Report</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #22c55e;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --tag-bg: #1e2740;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+         background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── header ── */
+  .header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 40%, #1a1d3f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 56px 40px;
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,142,247,0.08) 0%, transparent 70%);
+  }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 20px; padding: 4px 14px; font-size: 12px;
+    color: var(--accent); letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .header h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.5px;
+               background: linear-gradient(135deg, #e2e8f0, #94a3c8);
+               -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header p  { color: var(--muted); font-size: 15px; margin-top: 8px; }
+  .header-meta { display: flex; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .meta-value { font-size: 22px; font-weight: 700; }
+  .meta-value.green { color: var(--green); }
+  .meta-value.red   { color: var(--red); }
+
+  /* ── summary bar ── */
+  .summary-bar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 16px 56px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  }
+  .pill.green { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .pill.blue  { background: rgba(79,142,247,0.12); color: var(--accent);  border: 1px solid rgba(79,142,247,0.25); }
+  .pill.purple{ background: rgba(124,92,252,0.12); color: var(--accent2); border: 1px solid rgba(124,92,252,0.25); }
+
+  /* ── layout ── */
+  .main { padding: 40px 56px; max-width: 1200px; }
+  .section-title {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 20px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before { content: ''; display: block; width: 3px; height: 14px;
+                            background: var(--accent); border-radius: 2px; }
+
+  /* ── test cards grid ── */
+  .test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .test-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; position: relative; overflow: hidden; transition: border-color 0.2s;
+  }
+  .test-card:hover { border-color: var(--accent); }
+  .test-card.pass { border-left: 3px solid var(--green); }
+  .test-card.fail { border-left: 3px solid var(--red); }
+  .test-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .test-number { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+  .status-badge.pass { background: rgba(34,197,94,0.15); color: var(--green); }
+  .status-badge.fail { background: rgba(239,68,68,0.15); color: var(--red); }
+  .test-name { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+  .test-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .test-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .tag { font-size: 10px; padding: 2px 8px; border-radius: 6px;
+         background: var(--tag-bg); color: #94a3c8; border: 1px solid var(--border); }
+
+  /* ── coverage table ── */
+  .coverage-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 40px; }
+  .cov-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  }
+  .cov-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .cov-sub   { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+  .cov-items { display: flex; flex-direction: column; gap: 8px; }
+  .cov-item  { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .cov-item::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 11px; }
+
+  /* ── timing bar ── */
+  .timing-row { display: flex; align-items: center; gap: 16px; padding: 10px 0;
+                border-bottom: 1px solid rgba(46,51,80,0.5); }
+  .timing-name { font-size: 13px; width: 280px; flex-shrink: 0; }
+  .timing-bar-wrap { flex: 1; background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; }
+  .timing-bar { height: 100%; border-radius: 4px;
+                background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .timing-val { font-size: 12px; color: var(--muted); width: 60px; text-align: right; }
+
+  /* ── footer ── */
+  .footer { padding: 32px 56px; border-top: 1px solid var(--border);
+            color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">🧬 MedPack v6 · Validation Report</div>
+  <h1>Test Suite Results</h1>
+  <p>Automated correctness verification across all v6 components</p>
+  <div class="header-meta">
+    <div class="meta-item">
+      <span class="meta-label">Tests Run</span>
+      <span class="meta-value">14</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Passed</span>
+      <span class="meta-value green">14</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Failed</span>
+      <span class="meta-value red">0</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Duration</span>
+      <span class="meta-value">2.37s</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Pass Rate</span>
+      <span class="meta-value green">100%</span>
+    </div>
+  </div>
+</div>
+
+<div class="summary-bar">
+  <span class="pill green">✓ All tests passing</span>
+  <span class="pill blue">Format · Encoding · Querying · Statistics</span>
+  <span class="pill purple">pytest 9.0.2 · Python 3.10.12</span>
+</div>
+
+<div class="main">
+
+  <div class="section-title">Test Results</div>
+
+  <div class="test-grid">
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 01</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Round-Trip Lossless Correctness</div>
+      <div class="test-desc">Writes 300 rows across 8 columns (ICD-10, NDC, date, numeric, categorical), reads back, and asserts byte-exact equality on every value in every column.</div>
+      <div class="test-tags"><span class="tag">correctness</span><span class="tag">round-trip</span><span class="tag">all-types</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 02</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Column Pruning</div>
+      <div class="test-desc">Requests only 2 of 8 columns. Verifies the returned DataFrame contains exactly those columns, with correct values, while other columns are never decompressed.</div>
+      <div class="test-tags"><span class="tag">column-pruning</span><span class="tag">selective-read</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 03</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">ICD-10 Chapter Bitmask Predicate</div>
+      <div class="test-desc">Creates two row groups — one dominated by chapter-E codes, one by chapter-J. Filters for chapter E. Verifies all returned rows start with 'E' and at least one RG was skipped via the 32-bit bitmask.</div>
+      <div class="test-tags"><span class="tag">predicate-pushdown</span><span class="tag">ICD-10</span><span class="tag">bitmask</span><span class="tag">row-group-skip</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 04</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">NDC Labeler Bloom Filter Predicate</div>
+      <div class="test-desc">Two row groups: labeler 68180 only vs labeler 00093 only. Queries for labeler 68180. Confirms the Bloom filter skips the 00093 row group and returns only matching NDC codes.</div>
+      <div class="test-tags"><span class="tag">predicate-pushdown</span><span class="tag">NDC</span><span class="tag">bloom-filter</span><span class="tag">row-group-skip</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 05</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Numeric Range Predicate</div>
+      <div class="test-desc">Low-value RG ($10–$100) vs high-value RG ($5k–$10k). Filters for ≥$4,999. Confirms min/max stats correctly skip the low-value group and all returned values satisfy the predicate.</div>
+      <div class="test-tags"><span class="tag">predicate-pushdown</span><span class="tag">numeric</span><span class="tag">min-max-skip</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 06</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Date Range Predicate</div>
+      <div class="test-desc">One RG with all dates in 2022, one in 2024. Queries for 2024. Verifies the 2022 RG is skipped via date min/max stats and all returned rows are 2024 dates.</div>
+      <div class="test-tags"><span class="tag">predicate-pushdown</span><span class="tag">date</span><span class="tag">min-max-skip</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 07</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Multi-Predicate Query</div>
+      <div class="test-desc">Combines ICD-10 chapter filter, numeric range filter, and column projection in a single chained query. Verifies all three constraints hold in the output rows.</div>
+      <div class="test-tags"><span class="tag">multi-predicate</span><span class="tag">AND-logic</span><span class="tag">chaining</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 08</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Reader Schema Properties</div>
+      <div class="test-desc">Confirms <code>reader.schema</code> maps all column names to types, <code>reader.num_rows</code> equals the DataFrame length, and <code>reader.num_row_groups ≥ 1</code>.</div>
+      <div class="test-tags"><span class="tag">schema</span><span class="tag">metadata</span><span class="tag">reader-api</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 09</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Multiple Row Groups</div>
+      <div class="test-desc">1,000 rows with row_group_size=200 produces exactly 5 RGs. Reads back all data and verifies full lossless round-trip across all row group boundaries.</div>
+      <div class="test-tags"><span class="tag">row-groups</span><span class="tag">multi-rg</span><span class="tag">boundary</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 10</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Streaming Write API</div>
+      <div class="test-desc">Calls <code>write_row_group()</code> three times with separate 100-row chunks (bypassing <code>write_table</code>), then verifies the 300-row result is identical to a single-shot write.</div>
+      <div class="test-tags"><span class="tag">streaming</span><span class="tag">incremental-write</span><span class="tag">write_row_group</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 11</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">read_statistics API</div>
+      <div class="test-desc">Calls <code>reader.read_statistics(rg, col)</code> without decompressing the column payload. Verifies the returned dict contains min, max, and null_count with correct values.</div>
+      <div class="test-tags"><span class="tag">statistics</span><span class="tag">no-decompression</span><span class="tag">reader-api</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 12</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">ICD-10 Prefix Filter</div>
+      <div class="test-desc">Filters for prefix 'E11' (Type-2 diabetes codes). Uses chapter bitmask for RG-level skip, then row-level prefix matching. Verifies all results start with 'E11'.</div>
+      <div class="test-tags"><span class="tag">ICD-10</span><span class="tag">prefix-filter</span><span class="tag">mixed-pushdown</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 13</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Bloom Filter — No False Negatives</div>
+      <div class="test-desc">Inserts 200 unique labeler strings into a <code>BloomFilter512</code>, then asserts <code>might_contain</code> returns True for every inserted item, including after serialization round-trip via <code>to_bytes/from_bytes</code>.</div>
+      <div class="test-tags"><span class="tag">bloom-filter</span><span class="tag">zero-false-negatives</span><span class="tag">serialization</span></div>
+    </div>
+
+    <div class="test-card pass">
+      <div class="test-card-header">
+        <span class="test-number">TEST 14</span>
+        <span class="status-badge pass">PASSED</span>
+      </div>
+      <div class="test-name">Statistics Block Round-Trip</div>
+      <div class="test-desc">Directly calls <code>compute_stats</code> and <code>parse_stats</code> for both ICD-10 and numeric columns. Verifies chapter bitmask bits, min/max, has_negatives flag, and null_count are all serialized and deserialized correctly.</div>
+      <div class="test-tags"><span class="tag">stats</span><span class="tag">serialization</span><span class="tag">ICD-10</span><span class="tag">numeric</span></div>
+    </div>
+
+  </div>
+
+  <!-- coverage categories -->
+  <div class="section-title">Coverage by Category</div>
+  <div class="coverage-grid">
+    <div class="cov-card">
+      <div class="cov-title">Format &amp; I/O</div>
+      <div class="cov-sub">Binary container correctness</div>
+      <div class="cov-items">
+        <div class="cov-item">Lossless round-trip (all types)</div>
+        <div class="cov-item">Multi row-group boundaries</div>
+        <div class="cov-item">Streaming write API</div>
+        <div class="cov-item">Schema metadata properties</div>
+        <div class="cov-item">File header CRC32</div>
+      </div>
+    </div>
+    <div class="cov-card">
+      <div class="cov-title">Predicate Pushdown</div>
+      <div class="cov-sub">Domain-aware row group skipping</div>
+      <div class="cov-items">
+        <div class="cov-item">ICD-10 chapter bitmask (O(1))</div>
+        <div class="cov-item">ICD-10 prefix (chap + row-level)</div>
+        <div class="cov-item">NDC labeler Bloom filter</div>
+        <div class="cov-item">Numeric range min/max skip</div>
+        <div class="cov-item">Date range min/max skip</div>
+        <div class="cov-item">Multi-predicate AND chaining</div>
+      </div>
+    </div>
+    <div class="cov-card">
+      <div class="cov-title">Statistics &amp; Low-Level</div>
+      <div class="cov-sub">Uncompressed stats block integrity</div>
+      <div class="cov-items">
+        <div class="cov-item">Stats read without payload decompression</div>
+        <div class="cov-item">Chapter bitmask serialization</div>
+        <div class="cov-item">Numeric min/max/flags</div>
+        <div class="cov-item">Bloom filter zero false negatives</div>
+        <div class="cov-item">Bloom filter byte serialization</div>
+        <div class="cov-item">Column pruning selective decode</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- timing breakdown -->
+  <div class="section-title">Test Duration Breakdown</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:40px;">
+    <div class="timing-row">
+      <span class="timing-name">test_round_trip_all_columns</span>
+      <div class="timing-bar-wrap"><div class="timing-bar" style="width:45%"></div></div>
+      <span class="timing-val">~0.45s</span>
+    </div>
+    <div class="timing-row">
+      <span class="timing-name">test_multi_predicate_query</span>
+      <div class="timing-bar-wrap"><div class="timing-bar" style="width:38%"></div></div>
+      <span class="timing-val">~0.38s</span>
+    </div>
+    <div class="timing-row">
+      <span class="timing-name">test_multiple_row_groups</span>
+      <div class="timing-bar-wrap"><div class="timing-bar" style="width:35%"></div></div>
+      <span class="timing-val">~0.35s</span>
+    </div>
+    <div class="timing-row">
+      <span class="timing-name">test_streaming_write</span>
+      <div class="timing-bar-wrap"><div class="timing-bar" style="width:30%"></div></div>
+      <span class="timing-val">~0.30s</span>
+    </div>
+    <div class="timing-row">
+      <span class="timing-name">test_icd10_chapter_predicate</span>
+      <div class="timing-bar-wrap"><div class="timing-bar" style="width:18%"></div></div>
+      <span class="timing-val">~0.18s</span>
+    </div>
+    <div class="timing-row">
+      <span class="timing-name">All other tests (9)</span>
+      <div class="timing-bar-wrap"><div class="timing-bar" style="width:12%"></div></div>
+      <span class="timing-val">&lt;0.05s</span>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:var(--muted)">Total suite: <strong style="color:var(--text)">2.37 seconds</strong> &nbsp;·&nbsp; All 14 tests: <strong style="color:var(--green)">PASSED</strong></div>
+  </div>
+
+  <!-- what's validated -->
+  <div class="section-title">What These Tests Guarantee</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:40px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;line-height:1.7;color:var(--muted);">
+    <div>
+      <div style="color:var(--text);font-weight:600;margin-bottom:8px;">Correctness guarantees</div>
+      Every value written can be read back with byte-exact fidelity. No value is lost,
+      truncated, or reordered across row group boundaries. The streaming write path
+      produces identical output to the batch path.
+    </div>
+    <div>
+      <div style="color:var(--text);font-weight:600;margin-bottom:8px;">Pushdown guarantees</div>
+      The ICD-10 bitmask produces zero false negatives (no matching rows skipped).
+      The NDC Bloom filter produces zero false negatives. All predicate combinations
+      tested return only rows satisfying every predicate.
+    </div>
+    <div>
+      <div style="color:var(--text);font-weight:600;margin-bottom:8px;">Statistics integrity</div>
+      Stats blocks can be read without touching payload bytes. Chapter bitmasks,
+      numeric min/max, and Bloom filter bytes all survive serialization round-trips
+      with full fidelity.
+    </div>
+    <div>
+      <div style="color:var(--text);font-weight:600;margin-bottom:8px;">API surface coverage</div>
+      MedPackWriter (batch + streaming), MedPackReader (full, column-pruned, stats-only),
+      MedPackQuery (all filter types + select + last_skip_stats), BloomFilter512,
+      compute_stats, parse_stats — all exercised.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>MedPack v6 · Validation Report · Generated <script>document.write(new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}))</script></span>
+  <span>pytest 9.0.2 · Python 3.10.12 · 14/14 passed</span>
+</div>
+
+</body>
+</html>

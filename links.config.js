@@ -1,31 +1,26 @@
 /**
  * MedPack landing — all outbound URLs in one place.
- * Edit here when your demo, repo, or forms move. No need to touch HTML.
- *
- * Keys must match data-dynamic="..." / data-dynamic-form="..." in index.html
+ * GitHub Pages base: https://dextersrobot.github.io/MedPack-Landing/
  */
 window.MEDPACK_LINKS = {
-  // Primary CTAs (Stitch buttons → wired here)
   apiKey: 'https://example.com/early-access',
   earlyAccess: 'https://example.com/early-access',
   technicalSpec: '#',
 
-  // "Try demo" in nav → live Flask app on Render (benchmark / compress / decompress)
   liveDemo: 'https://medpack-demo.onrender.com',
 
-  // Published static HTML reports (public repo — GitHub Pages)
-  // https://github.com/dextersrobot/MedPack_Reports
-  reportsHub: 'https://dextersrobot.github.io/MedPack_Reports/',
-  validationReport: 'https://dextersrobot.github.io/MedPack_Reports/validation_report.html',
-  benchmarkReport: 'https://dextersrobot.github.io/MedPack_Reports/benchmark_report.html',
+  // This site — v6 static reports (same repo as index.html)
+  reportsHub: 'https://dextersrobot.github.io/MedPack-Landing/#evidence',
+  validationReport: 'https://dextersrobot.github.io/MedPack-Landing/medpack_v6_validation.html',
+  benchmarkReport: 'https://dextersrobot.github.io/MedPack-Landing/medpack_v6_benchmark.html',
 
-  // Footer
+  // Older multi-report hub (optional / legacy)
+  reportsArchive: 'https://dextersrobot.github.io/MedPack_Reports/',
+
   apiDocs: '#',
   github: 'https://github.com/dextersrobot/medpack',
   privacy: '#',
   terms: '#',
   contactSupport: 'mailto:hello@yourcompany.com',
-
-  // Waitlist: set to your Google Form / Typeform / HubSpot form action URL
   waitlist: 'https://example.com/waitlist',
 };

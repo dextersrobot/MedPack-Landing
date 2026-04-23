@@ -1,335 +1,185 @@
-<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>MedPack | Clinical-Grade Lossless Compression API</title>
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary-container": "#1e3a5f",
-                        "surface-tint": "#455f87",
-                        "tertiary-fixed-dim": "#edbf7f",
-                        "surface-container-lowest": "#ffffff",
-                        "primary": "#022448",
-                        "inverse-surface": "#2e3132",
-                        "secondary-fixed-dim": "#b4c5ff",
-                        "on-secondary-fixed-variant": "#003ea8",
-                        "error-container": "#ffdad6",
-                        "tertiary": "#341f00",
-                        "surface-dim": "#d9dadc",
-                        "on-primary": "#ffffff",
-                        "on-error": "#ffffff",
-                        "error": "#ba1a1a",
-                        "on-surface": "#191c1e",
-                        "on-background": "#191c1e",
-                        "tertiary-fixed": "#ffddb2",
-                        "on-tertiary": "#ffffff",
-                        "on-secondary": "#ffffff",
-                        "inverse-primary": "#adc8f5",
-                        "surface-container": "#edeef0",
-                        "on-secondary-fixed": "#00174b",
-                        "on-tertiary-container": "#c69b5f",
-                        "on-primary-container": "#8aa4cf",
-                        "outline-variant": "#c4c6cf",
-                        "secondary-container": "#316bf3",
-                        "inverse-on-surface": "#f0f1f3",
-                        "tertiary-container": "#503300",
-                        "primary-fixed-dim": "#adc8f5",
-                        "on-tertiary-fixed": "#291800",
-                        "outline": "#74777f",
-                        "on-tertiary-fixed-variant": "#60410c",
-                        "surface-container-highest": "#e1e2e4",
-                        "surface-bright": "#f8f9fb",
-                        "surface": "#f8f9fb",
-                        "on-primary-fixed-variant": "#2d486d",
-                        "background": "#f8f9fb",
-                        "surface-container-high": "#e7e8ea",
-                        "on-secondary-container": "#fefcff",
-                        "surface-container-low": "#f3f4f6",
-                        "on-error-container": "#93000a",
-                        "primary-fixed": "#d5e3ff",
-                        "secondary-fixed": "#dbe1ff",
-                        "on-primary-fixed": "#001c3b",
-                        "secondary": "#0051d5",
-                        "surface-variant": "#e1e2e4",
-                        "on-surface-variant": "#43474e"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "fontFamily": {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    }
-                },
-            },
-        }
-    </script>
-<style>
-        body { font-family: 'Inter', sans-serif; }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .command-gradient {
-            background: linear-gradient(135deg, #022448 0%, #1e3a5f 100%);
-        }
-        .glass-header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(24px);
-        }
-    </style>
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MedPack v6 | Clinical columnar compression &amp; query pushdown</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            obsidian: { DEFAULT: "#0D0D0E", card: "#161618", line: "#27272A" },
+            brand: { DEFAULT: "#A855F7", dim: "#7c3aed" },
+            surface: { DEFAULT: "#16111b", up: "#1f1a23" },
+          },
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; }
+    .glow { box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.15), 0 0 40px -10px rgba(168, 85, 247, 0.35); }
+    .hero-grid {
+      background-image: linear-gradient(rgba(13, 13, 14, 0.92), rgba(22, 17, 27, 0.88)), radial-gradient(ellipse 80% 50% at 50% -20%, rgba(168, 85, 247, 0.2), transparent);
+    }
+  </style>
 </head>
-<body class="bg-surface text-on-surface antialiased">
-<!-- Top Navigation Shell -->
-<nav class="fixed top-0 w-full z-50 glass-header shadow-sm border-none">
-<div class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
-<div class="text-2xl font-bold tracking-tighter text-slate-900" style="">MedPack</div>
-<div class="hidden md:flex items-center space-x-8">
-<a class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#how-it-works" style="">How It Works</a>
-<a class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#benchmarks" style="">Benchmarks</a>
-<a data-dynamic="reportsHub" class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#">Reports</a>
-<a class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#early-access" style="">Early Access</a>
-<a data-dynamic="liveDemo" class="text-slate-600 hover:text-blue-600 transition-colors font-sans antialiased text-sm tracking-tight" href="#">Try demo</a>
-<a data-dynamic="apiKey" class="command-gradient text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-transform active:scale-95 inline-flex items-center justify-center" href="#">Get API Key</a>
-</div>
-<button class="md:hidden p-2 text-primary" style="">
-<span class="material-symbols-outlined" style="">menu</span>
-</button>
-</div>
-</nav>
-<main class="pt-20">
-<!-- Hero Section -->
-<section class="relative overflow-hidden bg-surface py-24 md:py-32">
-<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-<div class="z-10">
-<h1 class="text-5xl md:text-7xl font-extrabold text-primary tracking-tighter leading-tight mb-8" style="">
-                        Compress Healthcare Data <span class="text-secondary" style="">43% Better</span> Than the Best Alternative
-                    </h1>
-<p class="text-lg md:text-xl text-on-surface-variant mb-10 leading-relaxed max-w-xl" style="">
-                        The first compression engine built specifically for clinical data exploiting medical code relationships and cross-column conditional encoding to achieve what general-purpose algorithms cannot.
-                    </p>
-<div class="flex flex-wrap gap-4">
-<a data-dynamic="earlyAccess" class="command-gradient text-on-primary px-8 py-4 rounded-lg font-bold text-md shadow-lg shadow-primary/10 transition-all hover:opacity-90 inline-flex items-center justify-center" href="#">Get Early Access</a>
-<a data-dynamic="technicalSpec" class="border-2 border-outline/20 text-primary px-8 py-4 rounded-lg font-bold text-md hover:bg-surface-container-low transition-colors inline-flex items-center justify-center" href="#">Read the Technical Spec</a>
-</div>
-</div>
-<div class="relative flex justify-center">
-<div class="w-full aspect-square max-w-lg bg-surface-container-low rounded-xl relative overflow-hidden shadow-2xl">
-<img alt="Data Visualization Architecture" class="w-full h-full object-cover mix-blend-overlay opacity-30" data-alt="abstract architectural visualization of 3d medical data nodes interconnected by high-speed digital light filaments in a sterile blue environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsG69D97vq8WfGqK8PtFb08ERh2iEBO26m8J2Ei9P9ExJaJGjRoIhjwKh5L70JlCH2uj-Yw20LqqVY-W1MfONBMdcjpNRDYlZra6_ic6X8hJie8iR-nJGoJnTP1aqUDVuG-tk84Dqfv6P8fEvZHsrob1HrnrxJ1IrbLprtOLacHTfHt9-RmdEsw9hW6GD3zhfgDrSV_WbDYAmnRxs8xAJ0gFtxWT8lD4T2QO4W96iyAqA1qXzgXnRVVf31yZsS5BtMU2zCRSJJIaQ" style="">
-<div class="absolute inset-0 flex flex-col justify-center p-12">
-<div class="space-y-6">
-<div class="h-2 w-3/4 bg-primary/20 rounded"></div>
-<div class="h-2 w-1/2 bg-secondary/30 rounded"></div>
-<div class="h-2 w-2/3 bg-primary/20 rounded"></div>
-<div class="flex items-end justify-between pt-8">
-<div class="text-4xl font-bold text-primary" style="">0.04s</div>
-<div class="text-sm font-label text-on-surface-variant uppercase tracking-widest" style="">Latency Floor</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Stats Bar (Tonal Shift) -->
-<section class="bg-surface-container-low py-12">
-<div class="max-w-7xl mx-auto px-6">
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
-<div class="text-3xl font-extrabold text-primary mb-1" style="">43%</div>
-<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Better than lzma</div>
-</div>
-<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
-<div class="text-3xl font-extrabold text-primary mb-1" style="">10/12</div>
-<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Benchmark Wins</div>
-</div>
-<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
-<div class="text-3xl font-extrabold text-primary mb-1" style="">1,400</div>
-<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Fuzz Tests Passed</div>
-</div>
-<div class="p-6 bg-surface-container-lowest rounded shadow-sm">
-<div class="text-3xl font-extrabold text-primary mb-1" style="">SHA-256</div>
-<div class="text-xs font-label text-on-surface-variant uppercase tracking-widest" style="">Verified Lossless</div>
-</div>
-</div>
-</div>
-</section>
-<!-- How It Works Section -->
-<section class="py-24 bg-surface-container-lowest" id="how-it-works">
-<div class="max-w-7xl mx-auto px-6">
-<div class="mb-20">
-<h2 class="text-4xl font-bold text-primary tracking-tight mb-4" style="">The Clinical Advantage</h2>
-<div class="h-1.5 w-24 command-gradient rounded-full"></div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24">
-<div class="space-y-6">
-<div class="w-12 h-12 flex items-center justify-center bg-primary-fixed text-primary rounded">
-<span class="material-symbols-outlined" style="">analytics</span>
-</div>
-<h3 class="text-xl font-bold text-primary" style="">Format Auto-Detection</h3>
-<p class="text-on-surface-variant leading-relaxed" style="">
-                            Intelligently recognizes FHIR, HL7 v2, and DICOM metadata structures instantly, applying specialized dictionaries for common medical headers and segment tags.
-                        </p>
-</div>
-<div class="space-y-6">
-<div class="w-12 h-12 flex items-center justify-center bg-primary-fixed text-primary rounded">
-<span class="material-symbols-outlined" style="">clinical_notes</span>
-</div>
-<h3 class="text-xl font-bold text-primary" style="">Medical Code Intelligence</h3>
-<p class="text-on-surface-variant leading-relaxed" style="">
-                            Built-in lookup engines for ICD-10, SNOMED-CT, and LOINC. MedPack compresses repetitive clinical codes using domain-specific entropy modeling.
-                        </p>
-</div>
-<div class="space-y-6">
-<div class="w-12 h-12 flex items-center justify-center bg-primary-fixed text-primary rounded">
-<span class="material-symbols-outlined" style="">grid_view</span>
-</div>
-<h3 class="text-xl font-bold text-primary" style="">Cross-Column Encoding</h3>
-<p class="text-on-surface-variant leading-relaxed" style="">
-                            Predicts value distributions across related data columns—such as inferring medication ranges based on diagnosis codes to minimize bit usage.
-                        </p>
-</div>
-</div>
-<!-- Pipeline Diagram -->
-<div class="p-10 bg-surface-container-low rounded-xl border border-outline-variant/10">
-<h4 class="text-sm font-label text-on-surface-variant uppercase tracking-widest mb-10 text-center" style="">In-Stream Processing Pipeline</h4>
-<div class="flex flex-col lg:flex-row items-center justify-between gap-4">
-<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Format Detection</div>
-<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
-<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Column Classification</div>
-<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
-<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Type-Specific Encoding</div>
-<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
-<div class="px-6 py-4 bg-surface-container-lowest rounded border border-secondary/20 text-sm font-semibold text-primary" style="">Cross-Column Conditional</div>
-<span class="material-symbols-outlined text-outline-variant rotate-90 lg:rotate-0" style="">arrow_forward</span>
-<div class="px-6 py-4 command-gradient text-white rounded text-sm font-semibold" style="">Adaptive Entropy Backend</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Benchmark Results (Asymmetric Editorial Layout) -->
-<section class="py-24 bg-surface-container-low" id="benchmarks">
-<div class="max-w-7xl mx-auto px-6">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-<div class="lg:col-span-4">
-<h2 class="text-4xl font-bold text-primary tracking-tight mb-6 leading-tight" style="">Performance Benchmarks</h2>
-<p class="text-on-surface-variant mb-8 leading-relaxed" style="">
-                            MedPack consistently outperforms universal algorithms by leveraging the high redundancy of clinical terminologies and semantic schemas.
-                        </p>
-<div class="p-6 bg-tertiary-container text-on-tertiary-container rounded">
-<div class="flex gap-4 items-start">
-<span class="material-symbols-outlined" style="">verified</span>
-<div>
-<p class="text-xs font-label uppercase tracking-widest mb-2" style="">Dataset Verification</p>
-<p class="text-sm font-medium" style="">Benchmarked on 409,000+ rows of Synthea clinical data from 1,129 simulated patients.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="lg:col-span-8 bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-sm border border-outline-variant/10">
-<div class="space-y-12">
-<!-- Chart Bar 1 -->
-<div class="space-y-2">
-<div class="flex justify-between items-center text-sm font-semibold text-primary">
-<span class="" style="">MedPack (Adaptive Engine)</span>
-<span class="" style="">0.14:1 Compression Ratio</span>
-</div>
-<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
-<div class="h-full command-gradient" style="width: 14%"></div>
-</div>
-</div>
-<!-- Chart Bar 2 -->
-<div class="space-y-2">
-<div class="flex justify-between items-center text-sm font-semibold text-on-surface-variant">
-<span class="" style="">lzma (Level 9)</span>
-<span class="" style="">0.26:1 Compression Ratio</span>
-</div>
-<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
-<div class="h-full bg-outline-variant" style="width: 26%"></div>
-</div>
-</div>
-<!-- Chart Bar 3 -->
-<div class="space-y-2">
-<div class="flex justify-between items-center text-sm font-semibold text-on-surface-variant">
-<span class="" style="">bz2</span>
-<span class="" style="">0.38:1 Compression Ratio</span>
-</div>
-<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
-<div class="h-full bg-outline-variant/60" style="width: 38%"></div>
-</div>
-</div>
-<!-- Chart Bar 4 -->
-<div class="space-y-2">
-<div class="flex justify-between items-center text-sm font-semibold text-on-surface-variant">
-<span class="" style="">gzip</span>
-<span class="" style="">0.44:1 Compression Ratio</span>
-</div>
-<div class="w-full h-8 bg-surface-container rounded-sm overflow-hidden">
-<div class="h-full bg-outline-variant/30" style="width: 44%"></div>
-</div>
-</div>
-</div>
-<p class="mt-8 text-xs text-on-surface-variant italic" style="">*Lower ratio indicates better compression performance.</p>
-<p class="mt-6 text-sm text-on-surface-variant leading-relaxed">
-<span class="font-semibold text-primary">Reproducible evidence:</span>
-<a data-dynamic="reportsHub" class="text-secondary font-semibold hover:underline ml-1" href="#">Reports hub</a><span class="text-on-surface-variant mx-1">·</span>
-<a data-dynamic="validationReport" class="text-secondary font-semibold hover:underline" href="#">Validation report</a><span class="text-on-surface-variant mx-1">·</span>
-<a data-dynamic="benchmarkReport" class="text-secondary font-semibold hover:underline" href="#">Benchmark report</a>
-</p>
-</div>
-</div>
-</div>
-</section>
-<!-- Early Access Signup -->
-<section class="py-32 bg-surface-container-lowest" id="early-access">
-<div class="max-w-4xl mx-auto px-6 text-center">
-<h2 class="text-4xl font-bold text-primary mb-6" style="">Be First to Try MedPack</h2>
-<p class="text-on-surface-variant text-lg mb-12 max-w-xl mx-auto leading-relaxed" style="">
-                    Join our beta program and integrate the MedPack API into your existing HL7/FHIR pipelines. Reduced egress costs and faster data transfer guaranteed.
-                </p>
-<form class="flex flex-col md:flex-row gap-4 items-center max-w-lg mx-auto mb-6" data-dynamic-form="waitlist" method="get" target="_blank">
-<input class="w-full px-6 py-4 bg-surface-container-highest border-none border-b-2 border-outline/30 focus:border-secondary focus:ring-0 rounded-lg transition-all text-primary font-medium" name="email" placeholder="Enter clinical email address" type="email" autocomplete="email">
-<button type="submit" class="w-full md:w-auto command-gradient text-white px-8 py-4 rounded-lg font-bold shadow-lg shadow-primary/10 transition-transform active:scale-95 whitespace-nowrap">
-                        Join the Waitlist
-                    </button>
-</form>
-<p class="text-xs text-on-surface-variant tracking-wide" style="">No spam. Unsubscribe anytime. GDPR compliant.</p>
-</div>
-</section>
-</main>
-<!-- Footer Shell -->
-<footer class="w-full border-t border-slate-200 bg-slate-50">
-<div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-7xl mx-auto">
-<div class="mb-8 md:mb-0">
-<div class="text-lg font-bold text-slate-900 mb-2" style="">MedPack</div>
-<div class="text-xs font-medium uppercase tracking-widest text-slate-500" style="">
-                    © 2026 MedPack Systems. Clinical-grade precision.
-                </div>
-</div>
-<div class="flex flex-wrap justify-center gap-8">
-<a data-dynamic="apiDocs" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">API Documentation</a>
-<a data-dynamic="github" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">GitHub</a>
-<a data-dynamic="reportsHub" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Reports</a>
-<a data-dynamic="validationReport" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Validation</a>
-<a data-dynamic="benchmarkReport" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Benchmark</a>
-<a data-dynamic="privacy" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Privacy Policy</a>
-<a data-dynamic="terms" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Terms of Service</a>
-<a data-dynamic="contactSupport" class="text-xs font-medium uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-opacity" href="#">Contact Support</a>
-</div>
-</div>
-</footer>
-<script src="links.config.js"></script>
-<script src="apply-links.js"></script>
-</body></html>
+<body class="bg-obsidian text-zinc-100 antialiased min-h-screen">
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-obsidian-line/80 bg-obsidian/85 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <a href="#" class="text-lg font-extrabold tracking-tight text-white">MedPack <span class="text-brand font-mono text-sm font-semibold">v6</span></a>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-zinc-400">
+        <a class="hover:text-white transition-colors" href="#how">How it works</a>
+        <a class="hover:text-white transition-colors" href="#evidence">Reports</a>
+        <a class="hover:text-white transition-colors" href="#access">Early access</a>
+        <a data-dynamic="liveDemo" class="text-brand hover:text-violet-300 font-medium" href="#">Try demo</a>
+        <a data-dynamic="apiKey" class="px-4 py-2 rounded-md bg-brand text-obsidian font-semibold text-sm hover:bg-violet-400 transition-colors" href="#">Get API key</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pt-16">
+    <section class="hero-grid border-b border-obsidian-line/60">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <p class="font-mono text-xs tracking-[0.2em] text-brand/90 uppercase mb-4">Interactive launchpad</p>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
+            Queryable <span class="text-brand">columnar</span> healthcare compression
+          </h1>
+          <p class="text-lg text-zinc-400 max-w-xl leading-relaxed mb-8">
+            MedPack v6 brings a domain-aware <strong class="text-zinc-200">predicate pushdown</strong> engine on top of lossless columnar encoding — so you compress first, then filter and scan without touching general-purpose codecs.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a data-dynamic="earlyAccess" class="px-6 py-3.5 rounded-md bg-brand text-obsidian font-bold text-sm shadow-lg shadow-brand/20 hover:bg-violet-400 transition-colors inline-flex items-center justify-center" href="#">Get early access</a>
+            <a data-dynamic="technicalSpec" class="px-6 py-3.5 rounded-md border border-obsidian-line text-zinc-200 font-semibold text-sm hover:border-brand/50 hover:text-white transition-colors inline-flex items-center justify-center" href="#">Read the technical spec</a>
+            <a data-dynamic="liveDemo" class="px-6 py-3.5 rounded-md border border-brand/30 text-brand font-semibold text-sm hover:bg-brand/10 transition-colors inline-flex items-center justify-center" href="#">Open live demo</a>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="rounded-lg border border-obsidian-line overflow-hidden bg-obsidian-card aspect-[4/3] glow">
+            <img
+              src="screen.png"
+              alt="MedPack v6 system visualization"
+              class="w-full h-full object-cover object-top opacity-95"
+              width="1200"
+              height="900"
+            />
+          </div>
+          <p class="mt-3 text-xs text-zinc-500 font-mono">Stitch design system — Obsidian / electric purple</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-12 border-b border-obsidian-line/60 bg-surface/30">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div class="p-4 rounded border border-obsidian-line/80 bg-obsidian-card/50">
+            <div class="font-mono text-2xl sm:text-3xl font-semibold text-brand">v6.2</div>
+            <div class="text-xs uppercase tracking-widest text-zinc-500 mt-1">Format</div>
+          </div>
+          <div class="p-4 rounded border border-obsidian-line/80 bg-obsidian-card/50">
+            <div class="font-mono text-2xl sm:text-3xl font-semibold text-white">.mpk</div>
+            <div class="text-xs uppercase tracking-widest text-zinc-500 mt-1">Columnar</div>
+          </div>
+          <div class="p-4 rounded border border-obsidian-line/80 bg-obsidian-card/50">
+            <div class="font-mono text-2xl sm:text-3xl font-semibold text-white">Parquet</div>
+            <div class="text-xs uppercase tracking-widest text-zinc-500 mt-1">Benchmark baseline</div>
+          </div>
+          <div class="p-4 rounded border border-obsidian-line/80 bg-obsidian-card/50">
+            <div class="font-mono text-2xl sm:text-3xl font-semibold text-white">lossless</div>
+            <div class="text-xs uppercase tracking-widest text-zinc-500 mt-1">Byte-for-byte</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="py-20 md:py-28 border-b border-obsidian-line/60">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-3">How v6 is different</h2>
+        <p class="text-zinc-400 max-w-2xl mb-14">High-contrast, infrastructure-grade clarity: classify columns with healthcare context, encode per family, then serve queries with row-group statistics.</p>
+        <div class="grid md:grid-cols-3 gap-8">
+          <article class="p-6 rounded-lg border border-obsidian-line bg-obsidian-card/40">
+            <div class="w-10 h-10 rounded border border-obsidian-line flex items-center justify-center text-brand mb-4">
+              <span class="material-symbols-outlined" aria-hidden="true">view_column</span>
+            </div>
+            <h3 class="font-semibold text-white mb-2">Columnar &amp; typed</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Row groups, per-column chunks, and typed statistics (numeric, date, NDC, ICD-10) keep both compression and filter pruning sharp.</p>
+          </article>
+          <article class="p-6 rounded-lg border border-obsidian-line bg-obsidian-card/40">
+            <div class="w-10 h-10 rounded border border-obsidian-line flex items-center justify-center text-brand mb-4">
+              <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
+            </div>
+            <h3 class="font-semibold text-white mb-2">Predicate pushdown</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">The query path skips work using stored stats — not by guessing generic compression, but from medical types and per–row-group bounds.</p>
+          </article>
+          <article class="p-6 rounded-lg border border-obsidian-line bg-obsidian-card/40">
+            <div class="w-10 h-10 rounded border border-obsidian-line flex items-center justify-center text-brand mb-4">
+              <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+            </div>
+            <h3 class="font-semibold text-white mb-2">Verified round-trip</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Fuzzing and file-level checks back the lossless story — with dedicated validation and Parquet A/B pages below.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence" class="py-20 md:py-24 border-b border-obsidian-line/60 bg-surface/20">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-3">Reproducible evidence</h2>
+        <p class="text-zinc-400 max-w-2xl mb-10">Static, self-contained HTML: open in the browser, no backend. These are the v6 reports shipped with the MedPack project.</p>
+        <div class="flex flex-col sm:flex-row flex-wrap gap-4">
+          <a data-dynamic="validationReport" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-brand/40 bg-brand/5 text-white font-semibold text-center hover:border-brand hover:bg-brand/10 transition-colors" href="#">MedPack v6 — validation report</a>
+          <a data-dynamic="benchmarkReport" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-obsidian-line bg-obsidian-card/60 text-white font-semibold text-center hover:border-zinc-500 transition-colors" href="#">MedPack v6 — benchmark report</a>
+          <a data-dynamic="reportsArchive" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-obsidian-line text-zinc-300 font-medium text-center hover:text-white transition-colors" href="#">MedPack_Reports (legacy hub)</a>
+        </div>
+        <p class="mt-8 text-sm text-zinc-500">
+          Prefer the hosted paths on this site: <span class="font-mono text-zinc-400">/medpack_v6_validation.html</span> and <span class="font-mono text-zinc-400">/medpack_v6_benchmark.html</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="py-20 md:py-24 border-b border-obsidian-line/60" id="access">
+      <div class="max-w-xl mx-auto px-4 sm:px-6 text-center">
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-4">Early access</h2>
+        <p class="text-zinc-400 mb-8">We’ll route API keys and integration notes to your team as the beta opens up.</p>
+        <form class="flex flex-col sm:flex-row gap-3" data-dynamic-form="waitlist" method="get" target="_blank">
+          <input type="email" name="email" required autocomplete="email" placeholder="Work email" class="flex-1 px-4 py-3 rounded-md bg-obsidian-card border border-obsidian-line text-white placeholder-zinc-500 focus:border-brand focus:ring-0" />
+          <button type="submit" class="px-6 py-3 rounded-md bg-brand text-obsidian font-bold hover:bg-violet-400">Join waitlist</button>
+        </form>
+        <p class="text-xs text-zinc-500 mt-4">No spam. You can opt out any time.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-10 border-t border-obsidian-line/60 bg-obsidian">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <div class="font-bold text-white">MedPack</div>
+        <p class="text-xs text-zinc-500 font-mono mt-1">© 2026 · Clinical-grade precision</p>
+      </div>
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 uppercase tracking-widest">
+        <a data-dynamic="apiDocs" class="hover:text-zinc-300" href="#">API</a>
+        <a data-dynamic="github" class="hover:text-zinc-300" href="#">GitHub</a>
+        <a data-dynamic="validationReport" class="hover:text-zinc-300" href="#">Validation</a>
+        <a data-dynamic="benchmarkReport" class="hover:text-zinc-300" href="#">Benchmark</a>
+        <a data-dynamic="privacy" class="hover:text-zinc-300" href="#">Privacy</a>
+        <a data-dynamic="terms" class="hover:text-zinc-300" href="#">Terms</a>
+        <a data-dynamic="contactSupport" class="hover:text-zinc-300" href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+  <script src="links.config.js"></script>
+  <script src="apply-links.js"></script>
+</body>
+</html>
