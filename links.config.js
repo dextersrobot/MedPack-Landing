@@ -17,8 +17,12 @@ window.MEDPACK_LINKS = {
   reportsArchive: 'https://dextersrobot.github.io/MedPack_Reports/',
 
   apiDocs: '#',
-  // Private repo: no public GitHub link
-  contactSupport: 'mailto:ifrahsohail@hotmail.com',
-  // FormSubmit relays POSTs to your inbox (confirm once with FormSubmit on first use)
-  waitlist: 'https://formsubmit.co/ifrahsohail@hotmail.com',
+  // No mailto: your address stays off the page. Contact scrolls to the waitlist section.
+  contactSupport: '#access',
+
+  /**
+   * Waitlist: create a free access key at https://web3forms.com (use the inbox where you want leads).
+   * Paste the key here. It may appear in page source; your email does not.
+   */
+  web3formsAccessKey: '',
 };
