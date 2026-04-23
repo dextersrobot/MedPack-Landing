@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MedPack v6 | Clinical columnar compression &amp; query pushdown</title>
+  <title>MedPack | Clinical columnar compression &amp; query pushdown</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -38,13 +38,12 @@
 <body class="bg-obsidian text-zinc-100 antialiased min-h-screen">
   <header class="fixed top-0 inset-x-0 z-50 border-b border-obsidian-line/80 bg-obsidian/85 backdrop-blur-xl">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      <a href="#" class="text-lg font-extrabold tracking-tight text-white">MedPack <span class="text-brand font-mono text-sm font-semibold">v6</span></a>
+      <a href="#" class="text-lg font-extrabold tracking-tight text-white">MedPack</a>
       <nav class="hidden md:flex items-center gap-6 text-sm text-zinc-400">
         <a class="hover:text-white transition-colors" href="#how">How it works</a>
         <a class="hover:text-white transition-colors" href="#evidence">Reports</a>
         <a class="hover:text-white transition-colors" href="#access">Early access</a>
         <a data-dynamic="liveDemo" class="text-brand hover:text-violet-300 font-medium" href="#">Try demo</a>
-        <a data-dynamic="apiKey" class="px-4 py-2 rounded-md bg-brand text-obsidian font-semibold text-sm hover:bg-violet-400 transition-colors" href="#">Get API key</a>
       </nav>
     </div>
   </header>
@@ -58,7 +57,7 @@
             Queryable <span class="text-brand">columnar</span> healthcare compression
           </h1>
           <p class="text-lg text-zinc-400 max-w-xl leading-relaxed mb-8">
-            MedPack v6 brings a domain-aware <strong class="text-zinc-200">predicate pushdown</strong> engine on top of lossless columnar encoding — so you compress first, then filter and scan without touching general-purpose codecs.
+            MedPack brings a domain-aware <strong class="text-zinc-200">predicate pushdown</strong> engine on top of lossless columnar encoding, so you compress first, then filter and scan without touching general-purpose codecs.
           </p>
           <div class="flex flex-wrap gap-3">
             <a data-dynamic="earlyAccess" class="px-6 py-3.5 rounded-md bg-brand text-obsidian font-bold text-sm shadow-lg shadow-brand/20 hover:bg-violet-400 transition-colors inline-flex items-center justify-center" href="#">Get early access</a>
@@ -70,13 +69,13 @@
           <div class="rounded-lg border border-obsidian-line overflow-hidden bg-obsidian-card aspect-[4/3] glow">
             <img
               src="screen.png"
-              alt="MedPack v6 system visualization"
+              alt="MedPack system visualization"
               class="w-full h-full object-cover object-top opacity-95"
               width="1200"
               height="900"
             />
           </div>
-          <p class="mt-3 text-xs text-zinc-500 font-mono">Stitch design system — Obsidian / electric purple</p>
+          <p class="mt-3 text-xs text-zinc-500 font-mono">Stitch design system, Obsidian / electric purple</p>
         </div>
       </div>
     </section>
@@ -106,7 +105,7 @@
 
     <section id="how" class="py-20 md:py-28 border-b border-obsidian-line/60">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <h2 class="text-3xl font-bold text-white tracking-tight mb-3">How v6 is different</h2>
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-3">How MedPack is different</h2>
         <p class="text-zinc-400 max-w-2xl mb-14">High-contrast, infrastructure-grade clarity: classify columns with healthcare context, encode per family, then serve queries with row-group statistics.</p>
         <div class="grid md:grid-cols-3 gap-8">
           <article class="p-6 rounded-lg border border-obsidian-line bg-obsidian-card/40">
@@ -121,14 +120,14 @@
               <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
             </div>
             <h3 class="font-semibold text-white mb-2">Predicate pushdown</h3>
-            <p class="text-sm text-zinc-400 leading-relaxed">The query path skips work using stored stats — not by guessing generic compression, but from medical types and per–row-group bounds.</p>
+            <p class="text-sm text-zinc-400 leading-relaxed">The query path skips work using stored stats, not by guessing generic compression, but from medical types and per-row-group bounds.</p>
           </article>
           <article class="p-6 rounded-lg border border-obsidian-line bg-obsidian-card/40">
             <div class="w-10 h-10 rounded border border-obsidian-line flex items-center justify-center text-brand mb-4">
               <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
             </div>
             <h3 class="font-semibold text-white mb-2">Verified round-trip</h3>
-            <p class="text-sm text-zinc-400 leading-relaxed">Fuzzing and file-level checks back the lossless story — with dedicated validation and Parquet A/B pages below.</p>
+            <p class="text-sm text-zinc-400 leading-relaxed">Fuzzing and file-level checks back the lossless story, with dedicated validation and Parquet A/B pages below.</p>
           </article>
         </div>
       </div>
@@ -137,10 +136,10 @@
     <section id="evidence" class="py-20 md:py-24 border-b border-obsidian-line/60 bg-surface/20">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <h2 class="text-3xl font-bold text-white tracking-tight mb-3">Reproducible evidence</h2>
-        <p class="text-zinc-400 max-w-2xl mb-10">Static, self-contained HTML: open in the browser, no backend. These are the v6 reports shipped with the MedPack project.</p>
+        <p class="text-zinc-400 max-w-2xl mb-10">Static, self-contained HTML: open in the browser, no backend. These reports ship with the MedPack project.</p>
         <div class="flex flex-col sm:flex-row flex-wrap gap-4">
-          <a data-dynamic="validationReport" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-brand/40 bg-brand/5 text-white font-semibold text-center hover:border-brand hover:bg-brand/10 transition-colors" href="#">MedPack v6 — validation report</a>
-          <a data-dynamic="benchmarkReport" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-obsidian-line bg-obsidian-card/60 text-white font-semibold text-center hover:border-zinc-500 transition-colors" href="#">MedPack v6 — benchmark report</a>
+          <a data-dynamic="validationReport" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-brand/40 bg-brand/5 text-white font-semibold text-center hover:border-brand hover:bg-brand/10 transition-colors" href="#">MedPack validation report</a>
+          <a data-dynamic="benchmarkReport" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-obsidian-line bg-obsidian-card/60 text-white font-semibold text-center hover:border-zinc-500 transition-colors" href="#">MedPack benchmark report</a>
           <a data-dynamic="reportsArchive" class="flex-1 min-w-[200px] px-6 py-4 rounded-md border border-obsidian-line text-zinc-300 font-medium text-center hover:text-white transition-colors" href="#">MedPack_Reports (legacy hub)</a>
         </div>
         <p class="mt-8 text-sm text-zinc-500">
@@ -169,12 +168,9 @@
         <p class="text-xs text-zinc-500 font-mono mt-1">© 2026 · Clinical-grade precision</p>
       </div>
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 uppercase tracking-widest">
-        <a data-dynamic="apiDocs" class="hover:text-zinc-300" href="#">API</a>
         <a data-dynamic="github" class="hover:text-zinc-300" href="#">GitHub</a>
         <a data-dynamic="validationReport" class="hover:text-zinc-300" href="#">Validation</a>
         <a data-dynamic="benchmarkReport" class="hover:text-zinc-300" href="#">Benchmark</a>
-        <a data-dynamic="privacy" class="hover:text-zinc-300" href="#">Privacy</a>
-        <a data-dynamic="terms" class="hover:text-zinc-300" href="#">Terms</a>
         <a data-dynamic="contactSupport" class="hover:text-zinc-300" href="#">Contact</a>
       </div>
     </div>
