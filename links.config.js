@@ -5,7 +5,6 @@
 window.MEDPACK_LINKS = {
   apiKey: 'https://example.com/early-access',
   earlyAccess: 'https://example.com/early-access',
-  technicalSpec: '#',
 
   liveDemo: 'https://medpack-demo.onrender.com',
 
@@ -18,9 +17,8 @@ window.MEDPACK_LINKS = {
   reportsArchive: 'https://dextersrobot.github.io/MedPack_Reports/',
 
   apiDocs: '#',
-  github: 'https://github.com/dextersrobot/medpack',
-  privacy: '#',
-  terms: '#',
-  contactSupport: 'mailto:hello@yourcompany.com',
-  waitlist: 'https://example.com/waitlist',
+  // Private repo: no public GitHub link
+  contactSupport: 'mailto:ifrahsohail@hotmail.com',
+  // FormSubmit relays POSTs to your inbox (confirm once with FormSubmit on first use)
+  waitlist: 'https://formsubmit.co/ifrahsohail@hotmail.com',
 };

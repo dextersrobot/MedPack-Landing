@@ -61,7 +61,6 @@
           </p>
           <div class="flex flex-wrap gap-3">
             <a data-dynamic="earlyAccess" class="px-6 py-3.5 rounded-md bg-brand text-obsidian font-bold text-sm shadow-lg shadow-brand/20 hover:bg-violet-400 transition-colors inline-flex items-center justify-center" href="#">Get early access</a>
-            <a data-dynamic="technicalSpec" class="px-6 py-3.5 rounded-md border border-obsidian-line text-zinc-200 font-semibold text-sm hover:border-brand/50 hover:text-white transition-colors inline-flex items-center justify-center" href="#">Read the technical spec</a>
             <a data-dynamic="liveDemo" class="px-6 py-3.5 rounded-md border border-brand/30 text-brand font-semibold text-sm hover:bg-brand/10 transition-colors inline-flex items-center justify-center" href="#">Open live demo</a>
           </div>
         </div>
@@ -152,11 +151,15 @@
       <div class="max-w-xl mx-auto px-4 sm:px-6 text-center">
         <h2 class="text-3xl font-bold text-white tracking-tight mb-4">Early access</h2>
         <p class="text-zinc-400 mb-8">We’ll route API keys and integration notes to your team as the beta opens up.</p>
-        <form class="flex flex-col sm:flex-row gap-3" data-dynamic-form="waitlist" method="get" target="_blank">
+        <form class="flex flex-col sm:flex-row gap-3" data-dynamic-form="waitlist" method="POST" action="#">
+          <input type="hidden" name="_subject" value="MedPack waitlist signup" />
+          <input type="hidden" name="_next" value="https://dextersrobot.github.io/MedPack-Landing/?signedup=1#access" />
+          <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <input type="email" name="email" required autocomplete="email" placeholder="Work email" class="flex-1 px-4 py-3 rounded-md bg-obsidian-card border border-obsidian-line text-white placeholder-zinc-500 focus:border-brand focus:ring-0" />
           <button type="submit" class="px-6 py-3 rounded-md bg-brand text-obsidian font-bold hover:bg-violet-400">Join waitlist</button>
         </form>
-        <p class="text-xs text-zinc-500 mt-4">No spam. You can opt out any time.</p>
+        <p id="waitlist-thanks" class="text-sm text-emerald-400/90 mt-4 hidden">Thanks, we received your email.</p>
+        <p class="text-xs text-zinc-500 mt-4">No spam. You can opt out any time. Delivery uses a secure form relay; the first time you use this, your inbox may need to confirm the sender.</p>
       </div>
     </section>
   </main>
@@ -168,7 +171,6 @@
         <p class="text-xs text-zinc-500 font-mono mt-1">© 2026 · Clinical-grade precision</p>
       </div>
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500 uppercase tracking-widest">
-        <a data-dynamic="github" class="hover:text-zinc-300" href="#">GitHub</a>
         <a data-dynamic="validationReport" class="hover:text-zinc-300" href="#">Validation</a>
         <a data-dynamic="benchmarkReport" class="hover:text-zinc-300" href="#">Benchmark</a>
         <a data-dynamic="contactSupport" class="hover:text-zinc-300" href="#">Contact</a>
@@ -177,5 +179,13 @@
   </footer>
   <script src="links.config.js"></script>
   <script src="apply-links.js"></script>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get('signedup') === '1') {
+        var el = document.getElementById('waitlist-thanks');
+        if (el) el.classList.remove('hidden');
+      }
+    })();
+  </script>
 </body>
 </html>
