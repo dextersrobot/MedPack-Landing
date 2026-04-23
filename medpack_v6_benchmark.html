@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedPack v6 — Benchmark Report</title>
+<title>MedPack | Benchmark Report</title>
 <style>
   :root {
     --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3350;
@@ -149,9 +149,9 @@
 <body>
 
 <div class="header">
-  <div class="badge">📊 MedPack v6 · Benchmark Report</div>
+  <div class="badge">📊 MedPack · Benchmark Report</div>
   <h1>Compression &amp; Query Performance</h1>
-  <p>MedPack v6 vs MedPack v5 vs Parquet (4 codec variants) on real CMS datasets</p>
+  <p>MedPack (columnar) vs MedPack v5 vs Parquet (4 codec variants) on real CMS datasets</p>
   <div class="header-kpis">
     <div class="kpi">
       <span class="kpi-label">Best Compression</span>
@@ -180,7 +180,7 @@
 
   <!-- legend -->
   <div class="legend" style="margin-top:0;margin-bottom:32px;">
-    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#3b7de8,#6c48e8)"></div>MedPack v6</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#3b7de8,#6c48e8)"></div>MedPack</div>
     <div class="legend-item"><div class="legend-dot" style="background:#2d3748"></div>Parquet (uncompressed)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#374151"></div>Parquet + Snappy</div>
     <div class="legend-item"><div class="legend-dot" style="background:#78350f"></div>Parquet + Zstd-3</div>
@@ -199,7 +199,7 @@
     <div class="chart-container">
       <div class="chart-title">Compression Ratio (% saved vs raw CSV)</div>
       <div class="bar-row">
-        <div class="bar-label winner"><div class="dot" style="background:var(--accent)"></div>MedPack v6 <span class="winner-star">★</span></div>
+        <div class="bar-label winner"><div class="dot" style="background:var(--accent)"></div>MedPack <span class="winner-star">★</span></div>
         <div class="bar-track"><div class="bar-fill v6" style="width:91.3%">91.3%</div></div>
         <div class="bar-size">114 KB · 0.07s</div>
       </div>
@@ -238,7 +238,7 @@
         <div class="q-tag">column pruning</div>
       </div>
       <div class="query-card">
-        <div class="q-name">Numeric range $1k–$5k</div>
+        <div class="q-name">Numeric range $1k-$5k</div>
         <div class="q-time">0.042s</div>
         <div class="q-meta"><span>71 rows returned</span><span>0/5 RGs skipped</span></div>
         <div class="q-tag">range filter</div>
@@ -258,7 +258,7 @@
     <div class="chart-container">
       <div class="chart-title">Compression Ratio (% saved vs raw CSV)</div>
       <div class="bar-row">
-        <div class="bar-label winner"><div class="dot" style="background:var(--accent)"></div>MedPack v6 <span class="winner-star">★</span></div>
+        <div class="bar-label winner"><div class="dot" style="background:var(--accent)"></div>MedPack <span class="winner-star">★</span></div>
         <div class="bar-track"><div class="bar-fill v6" style="width:70%">70.0%</div></div>
         <div class="bar-size">594 KB · 0.50s</div>
       </div>
@@ -297,7 +297,7 @@
         <div class="q-tag">column pruning</div>
       </div>
       <div class="query-card">
-        <div class="q-name">Numeric range $1k–$5k</div>
+        <div class="q-name">Numeric range $1k-$5k</div>
         <div class="q-time">0.078s</div>
         <div class="q-meta"><span>116 rows returned</span><span>0/5 RGs skipped</span></div>
         <div class="q-tag">range filter</div>
@@ -317,7 +317,7 @@
     <div class="chart-container">
       <div class="chart-title">Compression Ratio (% saved vs raw CSV)</div>
       <div class="bar-row">
-        <div class="bar-label winner"><div class="dot" style="background:var(--accent)"></div>MedPack v6 <span class="winner-star">★</span></div>
+        <div class="bar-label winner"><div class="dot" style="background:var(--accent)"></div>MedPack <span class="winner-star">★</span></div>
         <div class="bar-track"><div class="bar-fill v6" style="width:82.9%">82.9%</div></div>
         <div class="bar-size">124 KB · 0.09s</div>
       </div>
@@ -356,7 +356,7 @@
         <div class="q-tag">column pruning</div>
       </div>
       <div class="query-card">
-        <div class="q-name">Numeric range $1k–$5k</div>
+        <div class="q-name">Numeric range $1k-$5k</div>
         <div class="q-time">0.042s</div>
         <div class="q-meta"><span>1,242 rows returned</span><span>0/5 RGs skipped</span></div>
         <div class="q-tag">range filter</div>
@@ -365,12 +365,12 @@
   </div>
 
   <!-- ════ PUSHDOWN DEMO ════ -->
-  <div class="section-title">Domain-Aware Predicate Pushdown — Controlled Demo</div>
+  <div class="section-title">Domain-Aware Predicate Pushdown: Controlled Demo</div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:1.8;">
     Synthetic dataset with 3 perfectly-separated row groups (2,000 rows each):
-    <strong style="color:var(--text)">RG0</strong> — ICD chapter-E, NDC labeler 68180, dates H1-2023, amounts $50–$400 &nbsp;·&nbsp;
-    <strong style="color:var(--text)">RG1</strong> — ICD chapter-J, NDC labeler 00093, dates H2-2023, amounts $800–$3k &nbsp;·&nbsp;
-    <strong style="color:var(--text)">RG2</strong> — ICD chapter-I, NDC labeler 68180, dates 2024, amounts $8k–$25k
+    <strong style="color:var(--text)">RG0</strong>: ICD chapter-E, NDC labeler 68180, dates H1-2023, amounts $50-$400 &nbsp;·&nbsp;
+    <strong style="color:var(--text)">RG1</strong>: ICD chapter-J, NDC labeler 00093, dates H2-2023, amounts $800-$3k &nbsp;·&nbsp;
+    <strong style="color:var(--text)">RG2</strong>: ICD chapter-I, NDC labeler 68180, dates 2024, amounts $8k-$25k
   </div>
 
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:40px;">
@@ -462,7 +462,7 @@
       </thead>
       <tbody>
         <tr class="v6-row">
-          <td><strong>MedPack v6</strong> ★</td>
+          <td><strong>MedPack</strong> ★</td>
           <td class="ratio-cell best">91.3%</td>
           <td class="ratio-cell best">70.0%</td>
           <td class="ratio-cell best">82.9%</td>
@@ -523,8 +523,8 @@
       <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px;">ICD-10 Chapter Bitmask</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.8;">
         A 32-bit integer stored per row group. Bit <em>k</em> = 1 iff the group contains any code starting with letter A+k.
-        A chapter-E filter ORs bit 4 against the mask — <strong style="color:var(--text)">O(1), no string comparison, no payload decompression.</strong>
-        Parquet can only do generic string min/max, which is useless for ICD-10 (every large group spans A–Z).
+        A chapter-E filter ORs bit 4 against the mask, <strong style="color:var(--text)">O(1), no string comparison, no payload decompression.</strong>
+        Parquet can only do generic string min/max, which is useless for ICD-10 (every large group spans A-Z).
       </div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;">
@@ -532,14 +532,14 @@
       <div style="font-size:13px;color:var(--muted);line-height:1.8;">
         512-byte probabilistic filter (k=7 hashes, SHA-256) per row group, keyed on the 5-digit NDC labeler prefix.
         <strong style="color:var(--text)">Zero false negatives. ~1% false positive rate.</strong> Allows skipping entire row groups
-        that definitely do not contain a given manufacturer's drugs — capability unique to MedPack.
+        that definitely do not contain a given manufacturer's drugs, capability unique to MedPack.
       </div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;">
       <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:12px;">Column Pruning</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.8;">
         Each column is stored as an independent chunk with its own byte offset. Reading 3 columns of 81 decompresses
-        only 3/81 payloads — <strong style="color:var(--text)">observed 16–23× speedup</strong> on wide files.
+        only 3/81 payloads, <strong style="color:var(--text)">observed 16-23× speedup</strong> on wide files.
         Stats blocks (always uncompressed) are read without touching any payload.
       </div>
     </div>
@@ -547,7 +547,7 @@
       <div style="font-size:14px;font-weight:700;color:var(--amber);margin-bottom:12px;">Numeric &amp; Date Range Skip</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.8;">
         Min/max stored per column per row group, exactly as in Parquet. A range query skips any group whose
-        [min, max] doesn't overlap the query range — <strong style="color:var(--text)">no payload touched for skipped groups.</strong>
+        [min, max] doesn't overlap the query range, <strong style="color:var(--text)">no payload touched for skipped groups.</strong>
         Works for both financial amounts and ISO-8601 dates.
       </div>
     </div>
@@ -556,7 +556,7 @@
 </div>
 
 <div class="footer">
-  <span>MedPack v6 · Benchmark Report · Generated <script>document.write(new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}))</script></span>
+  <span>MedPack · Benchmark Report · Generated <script>document.write(new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}))</script></span>
   <span>Sample: 5,000 rows/file · RG size: 1,000 · zstd-9 codec · 14/14 tests passing</span>
 </div>
 

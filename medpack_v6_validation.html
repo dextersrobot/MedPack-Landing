@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedPack v6 — Validation Report</title>
+<title>MedPack | Validation Report</title>
 <style>
   :root {
     --bg: #0f1117;
@@ -124,9 +124,9 @@
 <body>
 
 <div class="header">
-  <div class="header-badge">🧬 MedPack v6 · Validation Report</div>
+  <div class="header-badge">🧬 MedPack · Validation Report</div>
   <h1>Test Suite Results</h1>
-  <p>Automated correctness verification across all v6 components</p>
+  <p>Automated correctness verification across all columnar format components</p>
   <div class="header-meta">
     <div class="meta-item">
       <span class="meta-label">Tests Run</span>
@@ -189,7 +189,7 @@
         <span class="status-badge pass">PASSED</span>
       </div>
       <div class="test-name">ICD-10 Chapter Bitmask Predicate</div>
-      <div class="test-desc">Creates two row groups — one dominated by chapter-E codes, one by chapter-J. Filters for chapter E. Verifies all returned rows start with 'E' and at least one RG was skipped via the 32-bit bitmask.</div>
+      <div class="test-desc">Creates two row groups: one dominated by chapter-E codes, one by chapter-J. Filters for chapter E. Verifies all returned rows start with 'E' and at least one RG was skipped via the 32-bit bitmask.</div>
       <div class="test-tags"><span class="tag">predicate-pushdown</span><span class="tag">ICD-10</span><span class="tag">bitmask</span><span class="tag">row-group-skip</span></div>
     </div>
 
@@ -209,7 +209,7 @@
         <span class="status-badge pass">PASSED</span>
       </div>
       <div class="test-name">Numeric Range Predicate</div>
-      <div class="test-desc">Low-value RG ($10–$100) vs high-value RG ($5k–$10k). Filters for ≥$4,999. Confirms min/max stats correctly skip the low-value group and all returned values satisfy the predicate.</div>
+      <div class="test-desc">Low-value RG ($10-$100) vs high-value RG ($5k-$10k). Filters for ≥$4,999. Confirms min/max stats correctly skip the low-value group and all returned values satisfy the predicate.</div>
       <div class="test-tags"><span class="tag">predicate-pushdown</span><span class="tag">numeric</span><span class="tag">min-max-skip</span></div>
     </div>
 
@@ -288,7 +288,7 @@
         <span class="test-number">TEST 13</span>
         <span class="status-badge pass">PASSED</span>
       </div>
-      <div class="test-name">Bloom Filter — No False Negatives</div>
+      <div class="test-name">Bloom Filter: No False Negatives</div>
       <div class="test-desc">Inserts 200 unique labeler strings into a <code>BloomFilter512</code>, then asserts <code>might_contain</code> returns True for every inserted item, including after serialization round-trip via <code>to_bytes/from_bytes</code>.</div>
       <div class="test-tags"><span class="tag">bloom-filter</span><span class="tag">zero-false-negatives</span><span class="tag">serialization</span></div>
     </div>
@@ -406,14 +406,14 @@
       <div style="color:var(--text);font-weight:600;margin-bottom:8px;">API surface coverage</div>
       MedPackWriter (batch + streaming), MedPackReader (full, column-pruned, stats-only),
       MedPackQuery (all filter types + select + last_skip_stats), BloomFilter512,
-      compute_stats, parse_stats — all exercised.
+      compute_stats and parse_stats: all exercised.
     </div>
   </div>
 
 </div>
 
 <div class="footer">
-  <span>MedPack v6 · Validation Report · Generated <script>document.write(new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}))</script></span>
+  <span>MedPack · Validation Report · Generated <script>document.write(new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}))</script></span>
   <span>pytest 9.0.2 · Python 3.10.12 · 14/14 passed</span>
 </div>
 
